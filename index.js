@@ -12,27 +12,26 @@ dotenv.config();
 
 const port = process.env.PORT;
 const apiKey = process.env.PPLX_API_KEY;
-const privateKey = process.env.PRIVATE_KEY; 
-const rpcUrl = process.env.RPC_URL; 
-
+// const privateKey = process.env.PRIVATE_KEY; // Commented out
+// const rpcUrl = process.env.RPC_URL; // Commented out
 
 // .env requirements
 try {
     if (!port) throw new Error("PORT is not defined in .env");
     if (!apiKey) throw new Error("PPLX_API_KEY is not defined in .env");
-    if (!privateKey) throw new Error("PRIVATE_KEY is not defined in .env");
-    if (!rpcUrl) throw new Error("RPC_URL is not defined in .env");
+    // Remove checks for privateKey and rpcUrl if not needed
 } catch (error) {
     console.error(error);
     process.exit(1);
 }
-
 
 const client = new OpenAI({
     apiKey: apiKey, // Replace with your Perplexity API key
     baseURL: 'https://api.perplexity.ai',  // Perplexity API endpoint
   });
 
+// Commenting out Ethereum provider and wallet initialization
+/*
 const provider = new ethers.JsonRpcProvider(rpcUrl);
 const wallet = new ethers.Wallet(privateKey, provider);
 
@@ -46,6 +45,7 @@ const contractABI = [
 const contractAddress = "0xYourContractAddress"; 
 // Create contract instance
 const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+*/
 
 // returns {question, outcomes} object
 async function getMarketData(conditionId) {
@@ -103,12 +103,8 @@ async function getNoTokenId(conditionId){
     }
 }
 
-
-// returns the json object
-// answer, reasoning
-// construct winningTokenId from the "answer" field
+// Function to ask a question
 async function askQuestion(question) {
-
     try {
         const systemPrompt = `You are an expert analyst with real-time access to live news information across the world.
         You are tasked with settling prediction markets.
@@ -121,9 +117,8 @@ async function askQuestion(question) {
         Ensure the response is valid JSON.
         "answer" string should be strictly one of the outcomes.
         The market question being passed to you refers to a question or event that has
-        passed / occured till the time you are analyzing this.`;
+        passed / occurred till the time you are analyzing this.`;
        
-
         const response = await client.chat.completions.create({
             model: 'sonar-reasoning',
             messages: [
@@ -146,6 +141,9 @@ async function askQuestion(question) {
         }
     }
 }
+
+// Example usage of askQuestion
+askQuestion("Who will win the third match between RCB and CSK in IPL 2025?");
 
 async function processMarket(conditionId) {
     try {
