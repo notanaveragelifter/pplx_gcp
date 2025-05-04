@@ -7,11 +7,10 @@
 import { ethers } from 'ethers';
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
-import express from 'express'; // Import Express
 
 dotenv.config();
 
-const port = process.env.PORT || 8080; // Set the port to the environment variable or default to 8080
+const port = process.env.PORT;
 const apiKey = process.env.PPLX_API_KEY;
 // const privateKey = process.env.PRIVATE_KEY; // Commented out
 // const rpcUrl = process.env.RPC_URL; // Commented out
@@ -167,22 +166,7 @@ async function processMarket(conditionId) {
     }     
 }
 
+
 // try functions separately
 // askQuestion("Who will win the third match between RCB and CSK in IPL 2025?");
-
-const app = express(); // Create an Express application
-
-// Middleware to parse JSON requests
-app.use(express.json());
-
-// Define a simple endpoint to test the server
-app.get('/', (req, res) => {
-    res.send('Hello World!'); // Respond with a simple message
-});
-
-// Start the server and listen on the specified port
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`); // Log the running port
-});
-
 
